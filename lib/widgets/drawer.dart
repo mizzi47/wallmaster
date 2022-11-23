@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wallmaster/screens/dailylog.dart';
-import 'package:wallmaster/screens/dailylog_view.dart';
+import 'package:wallmaster/screens/dailylog_list.dart';
 
 Widget build(BuildContext context){
   return SafeArea(
@@ -31,11 +31,11 @@ Widget build(BuildContext context){
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        HomeScreen()),
+                        DailyLogList()),
                     (route) => false,
               );},
               leading: Icon(Icons.file_copy_rounded),
-              title: Text('Booking'),
+              title: Text('Daily Log'),
             ),
             ListTile(
               onTap: () {
@@ -47,7 +47,7 @@ Widget build(BuildContext context){
                       (route) => false,
                 );},
               leading: Icon(Icons.access_time_rounded),
-              title: Text('Status'),
+              title: Text('Schedule'),
             ),
             Spacer(),
             DefaultTextStyle(

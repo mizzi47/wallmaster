@@ -79,8 +79,7 @@ Widget sliders(BuildContext context) {
       aspectRatio: 2.0,
       enlargeCenterPage: true,
       enableInfiniteScroll: false,
-      initialPage: 2,
-      autoPlay: true,
+      initialPage: 1,
     ),
     items: imageSliders,
   ));

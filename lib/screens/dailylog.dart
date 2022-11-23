@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
-import 'package:wallmaster/widgets/testslider.dart' as testslider;
-import 'package:day_night_time_picker/lib/constants.dart';
-import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
+import 'package:wallmaster/widgets/imagesliders.dart' as testslider;
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
@@ -38,7 +36,7 @@ class _DailyLogState extends State<DailyLog> {
       drawer: constant_drawer.build(context),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('PDRM EVIDENCE BOOKING'),
+          title: const Text('Daily Log Details'),
           leading: IconButton(
             onPressed: _handleMenuButtonPressed,
             icon: ValueListenableBuilder<AdvancedDrawerValue>(
@@ -62,7 +60,7 @@ class _DailyLogState extends State<DailyLog> {
                 children: [
                   Container(
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -87,7 +85,7 @@ class _DailyLogState extends State<DailyLog> {
                   ),
                   Container(
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -112,57 +110,7 @@ class _DailyLogState extends State<DailyLog> {
                   ),
                   Container(
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your Agency/Department';
-                          }
-                          return null;
-                        },
-                        maxLines: null,
-                        controller: booking_name,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            icon: Icon(Icons.local_police_sharp),
-                            filled: true,
-                            fillColor: Colors.white,
-                            contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "Your Agency/Department",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please Enter Which Department';
-                          }
-                          return null;
-                        },
-                        maxLines: null,
-                        controller: booking_name,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            icon: Icon(Icons.account_balance),
-                            filled: true,
-                            fillColor: Colors.white,
-                            contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "To What Department?",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
                         onTap: () async {
                           FocusScope.of(context).requestFocus(new FocusNode());
