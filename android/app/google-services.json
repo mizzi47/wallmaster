@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "583109963791",
+    "project_id": "systemtest-f185c",
+    "storage_bucket": "systemtest-f185c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583109963791:android:08fcc7c0bd9b0ed84f737a",
+        "android_client_info": {
+          "package_name": "com.wallmaster.wallmaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "583109963791-53uuqsjs43edsn21713t0qet5tb79gi8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDluDHZuc5C72og2TZCrAw4ujLdvfLuqDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "583109963791-53uuqsjs43edsn21713t0qet5tb79gi8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "583109963791-1u2t8bfu02l6jugr5hh06h0hp919vss4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wallmaster.wallmaster"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

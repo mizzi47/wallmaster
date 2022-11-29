@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wallmaster/screens/dailylog.dart';
-import 'package:wallmaster/screens/dailylog_list.dart';
+import 'package:wallmaster/screens/dailylog/dailylog.dart';
+import 'package:wallmaster/screens/dailylog/dailylog_list.dart';
 
 Widget build(BuildContext context){
   return SafeArea(

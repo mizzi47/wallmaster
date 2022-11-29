@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
-import 'package:wallmaster/screens/dailylog.dart';
+import 'package:wallmaster/screens/dailylog/dailylog.dart';
 import 'package:wallmaster/model/dailylogmodel.dart' as dailylogmodel;
 
 
