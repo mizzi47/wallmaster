@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wallmaster/screens/dailylog/dailylog.dart';
-import 'package:wallmaster/screens/dailylog/dailylog_list.dart';
+import 'package:wallmaster/screens/dailylog/dailylog_view.dart';
+import 'package:wallmaster/screens/dailylog/job_list.dart';
+import 'package:wallmaster/screens/schedule/scheduleview.dart';
 
 Widget build(BuildContext context){
   return SafeArea(
@@ -31,11 +32,11 @@ Widget build(BuildContext context){
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        DailyLogList()),
+                        JobList()),
                     (route) => false,
               );},
               leading: Icon(Icons.file_copy_rounded),
-              title: Text('Daily Log'),
+              title: Text('My Jobs'),
             ),
             ListTile(
               onTap: () {
@@ -43,7 +44,7 @@ Widget build(BuildContext context){
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          DailyLog()),
+                          ScheduleView()),
                       (route) => false,
                 );},
               leading: Icon(Icons.access_time_rounded),

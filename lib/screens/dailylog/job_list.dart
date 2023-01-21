@@ -5,21 +5,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:wallmaster/screens/dailylog/dailylog_add.dart';
-import 'package:wallmaster/widgets/carddailylog.dart';
 import 'package:wallmaster/widgets/cardmyjob.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
-import 'package:wallmaster/screens/dailylog/dailylog_view.dart';
-import 'package:wallmaster/model/dailylogmodel.dart' as dailylogmodel;
+import 'package:wallmaster/model/jobmodel.dart' as jobmodel;
 
 
-class DailyLogList extends StatefulWidget {
+class JobList extends StatefulWidget {
   @override
-  _DailyLogListState createState() => _DailyLogListState();
+  _JobListState createState() => _JobListState();
 }
 
-class _DailyLogListState extends State<DailyLogList> {
-  dailylogmodel.Model _dbdailylog = dailylogmodel.Model();
+class _JobListState extends State<JobList> {
+  jobmodel.Model _joblist = jobmodel.Model();
   final formkey = new GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();
   final ScrollController _firstController = ScrollController();
@@ -52,21 +49,7 @@ class _DailyLogListState extends State<DailyLogList> {
         backgroundColor: Colors.blueGrey,
         appBar: AppBar(
           backgroundColor: Colors.blue.withOpacity(0.2),
-          title: const Text('Daily Log List'),
-          actions: [
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.withOpacity(0.5)),
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            DailyLogAdd()),
-                  );
-                },
-                child: Icon(Icons.add_box_rounded)
-            )
-          ],
+          title: const Text('My Job List'),
           leading: IconButton(
             onPressed: _handleMenuButtonPressed,
             icon: ValueListenableBuilder<AdvancedDrawerValue>(
@@ -88,7 +71,7 @@ class _DailyLogListState extends State<DailyLogList> {
           children: <Widget> [
             Container(
               child: FutureBuilder<List>(
-                  future: _dbdailylog.getDailyLog(),
+                  future: _joblist.getJobList(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) return Text(snapshot.toString());
                     if (snapshot.hasData) {
@@ -187,14 +170,14 @@ class _DailyLogListState extends State<DailyLogList> {
         shrinkWrap: true,
         itemCount: list?.length,
         itemBuilder: (BuildContext context, int index) {
-          return CardDailyLog(
-            title: 'Door Surveilance',
-            assign: 'Mizi',
-            description: 'Wiring',
-            assignemail: '',
-            taskno: 't/21',
-            priority: 2,
-          );
+            return CardMyJob(
+              title: 'Sunway Putra',
+              assign: 'Mr Chong',
+              description: 'Job Type',
+              assignemail: 'ssss',
+              taskno: 't/21',
+              priority: 2,
+            );
         },
       ),
     );

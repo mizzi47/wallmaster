@@ -7,16 +7,18 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
 
 
-class DailyLog extends StatefulWidget {
+class DailyLogView extends StatefulWidget {
   @override
-  _DailyLogState createState() => _DailyLogState();
+  _DailyLogViewState createState() => _DailyLogViewState();
 }
 
-class _DailyLogState extends State<DailyLog> {
+class _DailyLogViewState extends State<DailyLogView> {
   final formkey = new GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();
-  TextEditingController booking_name = new TextEditingController();
-  TextEditingController booking_date = new TextEditingController();
+  TextEditingController scope = new TextEditingController();
+  TextEditingController update = new TextEditingController();
+  TextEditingController pending = new TextEditingController();
+  TextEditingController issue = new TextEditingController();
   var datePicked;
 
   @override
@@ -36,6 +38,7 @@ class _DailyLogState extends State<DailyLog> {
       drawer: constant_drawer.build(context),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.blue.withOpacity(0.5),
           title: const Text('Daily Log Details'),
           leading: IconButton(
             onPressed: _handleMenuButtonPressed,
@@ -61,15 +64,10 @@ class _DailyLogState extends State<DailyLog> {
                   Container(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          return null;
-                        },
+                      child: TextField(
+                        readOnly: true,
                         maxLines: null,
-                        controller: booking_name,
+                        controller: scope,
                         obscureText: false,
                         decoration: InputDecoration(
                             icon: Icon(Icons.account_circle_sharp),
@@ -77,7 +75,7 @@ class _DailyLogState extends State<DailyLog> {
                             fillColor: Colors.white,
                             contentPadding:
                             EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "Sender name",
+                            hintText: "Wall Finishes/ Floor Finishes",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0))),
                       ),
@@ -86,23 +84,18 @@ class _DailyLogState extends State<DailyLog> {
                   Container(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your position';
-                          }
-                          return null;
-                        },
+                      child: TextField(
+                        readOnly: true,
                         maxLines: null,
-                        controller: booking_name,
+                        controller: update,
                         obscureText: false,
                         decoration: InputDecoration(
-                            icon: Icon(Icons.account_box_outlined),
+                            icon: Icon(Icons.account_circle_sharp),
                             filled: true,
                             fillColor: Colors.white,
                             contentPadding:
                             EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "Position name",
+                            hintText: "The update is bla bla bla",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0))),
                       ),
@@ -111,32 +104,38 @@ class _DailyLogState extends State<DailyLog> {
                   Container(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: TextFormField(
-                        onTap: () async {
-                          FocusScope.of(context).requestFocus(new FocusNode());
-                          datePicked = await DatePicker.showSimpleDatePicker(
-                            context,
-                            firstDate: DateTime(1960),
-                            dateFormat: "dd-MMMM-yyyy",
-                            looping: true,
-                          );
-                          booking_date.text = datePicked.toString();
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty || value == 'null' || value == null) {
-                            return 'Please enter submit date';
-                          }
-                          return null;
-                        },
-                        controller: booking_date,
+                      child: TextField(
+                        readOnly: true,
+                        maxLines: null,
+                        controller: pending,
                         obscureText: false,
                         decoration: InputDecoration(
-                            icon: Icon(Icons.calendar_today),
+                            icon: Icon(Icons.account_circle_sharp),
                             filled: true,
                             fillColor: Colors.white,
                             contentPadding:
                             EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "Submit date",
+                            hintText: "The pending is no screws attached in the wall",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0))),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: TextField(
+                        readOnly: true,
+                        maxLines: null,
+                        controller: issue,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                            icon: Icon(Icons.account_circle_sharp),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                            hintText: "water flowing inside mosaic of the second room",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0))),
                       ),
