@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
+import 'package:wallmaster/model/dailylogmodel.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
 import 'package:wallmaster/widgets/imagesliders.dart' as testslider;
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
@@ -13,6 +14,7 @@ class DailyLogAdd extends StatefulWidget {
 }
 
 class _DailyLogAddState extends State<DailyLogAdd> {
+  DailyLogModel _md = new DailyLogModel();
   final controller = MultiImagePickerController(
     maxImages: 10,
     allowedImageTypes: ['png', 'jpg', 'jpeg'],
@@ -26,6 +28,7 @@ class _DailyLogAddState extends State<DailyLogAdd> {
     'Carpentry Finishes',
     'Steel/aluminium Finishes'
   ];
+  var selectedscope = [];
   final formkey = new GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();
   TextEditingController update = new TextEditingController();
@@ -36,6 +39,8 @@ class _DailyLogAddState extends State<DailyLogAdd> {
 
   @override
   Widget build(BuildContext context) {
+    selectedscope = [];
+    selectedscope.length = 7;
     return AdvancedDrawer(
       backdropColor: Colors.blueGrey,
       controller: _advancedDrawerController,
@@ -72,6 +77,7 @@ class _DailyLogAddState extends State<DailyLogAdd> {
         body: SingleChildScrollView(
           child: Center(
             child: Form(
+              key: formkey,
               child: Column(
                 children: [
                   Align(
@@ -88,7 +94,18 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                             Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: RoundCheckBox(
-                                  onTap: (selected) {},
+                                  onTap: (selected) {
+                                    if(selected == true){
+                                      selectedscope[index] = scope[index].toString();
+                                      print(scope[index].toString());
+                                      print(selectedscope);
+                                    }
+                                    if(selected == false){
+                                      selectedscope[index] = null;
+                                      print(index);
+                                      print(selectedscope);
+                                    }
+                                  },
                                   size: 30,
                                   uncheckedColor: Colors.white,
                                 )),
@@ -217,19 +234,28 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                   Divider(color: Colors.black),
                   Container(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                            onPressed: (){
-                            },
-                            child: Text('Submit'),
-                          ),
-                        ),
-                      )
-                  ),
-                  SizedBox(height: 20,)
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
+                        onPressed: () async {
+                          if (formkey.currentState!.validate()) {
+                            _md.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text);
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => JobList()),
+                            // );
+                          }
+                        },
+                        child: Text('Submit'),
+                      ),
+                    ),
+                  )),
+                  SizedBox(
+                    height: 20,
+                  )
                 ],
               ),
             ),

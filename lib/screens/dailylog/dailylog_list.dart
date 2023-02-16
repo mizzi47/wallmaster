@@ -19,7 +19,7 @@ class DailyLogList extends StatefulWidget {
 }
 
 class _DailyLogListState extends State<DailyLogList> {
-  dailylogmodel.Model _dbdailylog = dailylogmodel.Model();
+  dailylogmodel.DailyLogModel _dbdailylog = dailylogmodel.DailyLogModel();
   final formkey = new GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();
   final ScrollController _firstController = ScrollController();
