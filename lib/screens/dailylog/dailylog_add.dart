@@ -4,12 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:path/path.dart';
 import 'package:wallmaster/model/dailylogmodel.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
-import 'package:wallmaster/widgets/imagesliders.dart' as testslider;
-
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
@@ -20,18 +19,24 @@ class DailyLogAdd extends StatefulWidget {
 }
 
 class _DailyLogAddState extends State<DailyLogAdd> {
-  List<File>? files;
-  var selectedfile;
-  Response? response;
-  String? progress;
-  Dio dio = new Dio();
-  DailyLogModel _md = new DailyLogModel();
+  //class initiation
+  Dio dio = Dio();
+  DailyLogModel _md = DailyLogModel();
+  final formkey = GlobalKey<FormState>();
+  final _advancedDrawerController = AdvancedDrawerController();
   final controller = MultiImagePickerController(
     maxImages: 10,
     allowedImageTypes: ['png', 'jpg', 'jpeg'],
     withData: true,
     withReadStream: true,
   );
+  //form initiation
+  TextEditingController update = TextEditingController();
+  TextEditingController pending = TextEditingController();
+  TextEditingController issue = TextEditingController();
+  TextEditingController logdate = TextEditingController();
+  var datePicked;
+  var selectedscope = [];
   List<String> scope = [
     'Wework',
     'Ceiling',
@@ -41,19 +46,14 @@ class _DailyLogAddState extends State<DailyLogAdd> {
     'Carpentry Finishes',
     'Steel/aluminium Finishes'
   ];
-  var selectedscope = [];
-  final formkey = new GlobalKey<FormState>();
-  final _advancedDrawerController = AdvancedDrawerController();
-  TextEditingController update = new TextEditingController();
-  TextEditingController pending = new TextEditingController();
-  TextEditingController issue = new TextEditingController();
-  TextEditingController logdate = new TextEditingController();
-  var datePicked;
+  //files upload declaration
+  var selectedfile;
+  List<File>? files;
+  Response? response;
+  String? progress;
 
   @override
   Widget build(BuildContext context) {
-    selectedscope = [];
-    selectedscope.length = 7;
     return AdvancedDrawer(
       backdropColor: Colors.blueGrey,
       controller: _advancedDrawerController,
@@ -109,13 +109,11 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                                 child: RoundCheckBox(
                                   onTap: (selected) {
                                     if(selected == true){
-                                      selectedscope[index] = scope[index].toString();
-                                      print(scope[index].toString());
+                                      selectedscope.add(index);
                                       print(selectedscope);
                                     }
                                     if(selected == false){
-                                      selectedscope[index] = null;
-                                      print(index);
+                                      selectedscope.remove(index);
                                       print(selectedscope);
                                     }
                                   },
@@ -208,14 +206,20 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                       padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
                         onTap: () async {
-                          FocusScope.of(context).requestFocus(new FocusNode());
-                          datePicked = await DatePicker.showSimpleDatePicker(
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          var datePickedNew = await DatePicker.showSimpleDatePicker(
                             context,
+                            initialDate: DateTime.now(),
                             firstDate: DateTime(1960),
-                            dateFormat: "dd-MMMM-yyyy",
+                            dateFormat: "dd-MM-yyyy",
                             looping: true,
                           );
-                          logdate.text = datePicked.toString();
+                          if(datePickedNew == null){
+                            print('null bro');
+                          }else{
+                            datePicked = datePickedNew;
+                            logdate.text=datePicked.toString().substring(0,10);
+                          }
                         },
                         validator: (value) {
                           if (value!.isEmpty ||
@@ -240,10 +244,10 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                     ),
                   ),
                   Divider(color: Colors.black),
-                  // MultiImagePickerView(
-                  //   controller: controller,
-                  //   padding: const EdgeInsets.all(10),
-                  // ),
+                  MultiImagePickerView(
+                    controller: controller,
+                    padding: const EdgeInsets.all(10),
+                  ),
                   Divider(color: Colors.black),
                   Container(
                       child: Padding(
@@ -254,74 +258,25 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green),
                         onPressed: () async {
-                          if (formkey.currentState!.validate()) {
-                            //_md.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text, files);
-                            //print(controller.images.first.bytes.toString());
-                            for (int i = 0; i < files!.length; i++) {
-                              // String uploadurl = "https://www.prismakhaslab.com/cpms/api/file_upload.php";
-                              String uploadurl = 'http://192.168.0.116/wallmaster/api/fileupload.php';
-
-                              FormData formdata = FormData.fromMap({
-                                "file": await MultipartFile.fromFile(files![i].path,
-                                    filename: basename(files![i].path)
-                                  //show only filename from path
-                                ),
-                              });
-
-                              response = await dio.post(
-                                uploadurl,
-                                data: formdata,
-                              );
-                              if (response!.statusCode == 200) {
-                                print(response.toString());
-                                //print response from server
-                              } else {
-                                print("Error during connection to server.");
-                              }
-                            }
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => JobList()),
-                            // );
-                          }
+                          selectedscope.sort();
+                          await _md.testapi();
+                          // if (formkey.currentState!.validate()) {
+                          //   showDialog(barrierDismissible: false,
+                          //     context:context,
+                          //     builder:(BuildContext context){
+                          //       return LoadingAnimationWidget.fourRotatingDots(
+                          //         color: Colors.white,
+                          //         size: 100,
+                          //       );
+                          //     },
+                          //   );
+                          //   await _md.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text.substring(0,10), controller.images).then((value) => Navigator.pop(context));
+                          // }
                         },
                         child: Text('Submit'),
                       ),
                     ),
                   )),
-                  Container(
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          shape: new RoundedRectangleBorder(
-                            borderRadius:
-                            new BorderRadius.circular(30.0),
-                          ),
-                        ),
-                        onPressed: () {
-                          selectFile();
-                        },
-                        icon: Icon(Icons.folder_open),
-                        label: Text("CHOOSE FILE"),
-                      )),
-                  SizedBox(height: 10.0),
-                  //if selectedfile is null then show empty container
-                  //if file is selected then show upload button
-                  if (files == null)
-                    Container()
-                  else
-                    for (int i = 0; i < files!.length; i++)
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: <Widget>[
-                            Icon(Icons.file_copy_rounded,
-                                color: Colors.yellow),
-                            Text(basename(files![i].path),
-                                style: TextStyle(
-                                    color: Colors.black))
-                          ],
-                        ),
-                      ),
                   SizedBox(height: 10.0),
                 ],
               ),
@@ -330,20 +285,6 @@ class _DailyLogAddState extends State<DailyLogAdd> {
         ),
       ),
     );
-  }
-
-  selectFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'pdf', 'mp4'],
-    );
-    if (result != null) {
-      //if there is selected file
-      files = result.paths.map((path) => File(path!)).toList();
-    }
-    print(basename(files![0].path));
-    setState(() {});
   }
 
   void _handleMenuButtonPressed() {

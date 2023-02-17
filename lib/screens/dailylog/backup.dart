@@ -352,3 +352,34 @@
 //     _advancedDrawerController.showDrawer();
 //   }
 // }
+
+
+
+// for (int i = 0; i < listImages!.length; i++) {
+//   // String uploadurl = "https://www.prismakhaslab.com/cpms/api/file_upload.php";
+//   String uploadurl = 'http://192.168.1.138/wallmaster/api/fileupload.php';
+//
+//   FormData formdata = FormData.fromMap({
+//     "file": await MultipartFile.fromFile(listImages[i].path,
+//         filename: basename(listImages![i].path)
+//       //show only filename from path
+//     ),
+//   });
+//   response = await dio.post(
+//     uploadurl,
+//     data: formdata,
+//     onSendProgress: (int sent, int total) {
+//       print('$sent $total');
+//     },
+//   );
+//   if (response!.statusCode == 200) {
+//     print(response.toString());
+//     //print response from server
+//   } else {
+//     print("Error during connection to server.");
+//   }
+// }
+// final url = Uri.parse('http://192.168.1.138/wallmaster/dailylog/addDailyLog');
+// final headers = {"Content-type": "application/json"};
+// final responseAdd = await http.post(url, headers: headers, body: jsonEncode(obj.toJson()));
+// print(responseAdd.body);
