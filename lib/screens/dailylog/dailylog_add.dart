@@ -1,9 +1,15 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
+import 'package:path/path.dart';
 import 'package:wallmaster/model/dailylogmodel.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
 import 'package:wallmaster/widgets/imagesliders.dart' as testslider;
+
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
@@ -14,10 +20,17 @@ class DailyLogAdd extends StatefulWidget {
 }
 
 class _DailyLogAddState extends State<DailyLogAdd> {
+  List<File>? files;
+  var selectedfile;
+  Response? response;
+  String? progress;
+  Dio dio = new Dio();
   DailyLogModel _md = new DailyLogModel();
   final controller = MultiImagePickerController(
     maxImages: 10,
     allowedImageTypes: ['png', 'jpg', 'jpeg'],
+    withData: true,
+    withReadStream: true,
   );
   List<String> scope = [
     'Wework',
@@ -227,10 +240,10 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                     ),
                   ),
                   Divider(color: Colors.black),
-                  MultiImagePickerView(
-                    controller: controller,
-                    padding: const EdgeInsets.all(10),
-                  ),
+                  // MultiImagePickerView(
+                  //   controller: controller,
+                  //   padding: const EdgeInsets.all(10),
+                  // ),
                   Divider(color: Colors.black),
                   Container(
                       child: Padding(
@@ -242,7 +255,30 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                             backgroundColor: Colors.green),
                         onPressed: () async {
                           if (formkey.currentState!.validate()) {
-                            _md.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text);
+                            //_md.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text, files);
+                            //print(controller.images.first.bytes.toString());
+                            for (int i = 0; i < files!.length; i++) {
+                              // String uploadurl = "https://www.prismakhaslab.com/cpms/api/file_upload.php";
+                              String uploadurl = 'http://192.168.0.116/wallmaster/api/fileupload.php';
+
+                              FormData formdata = FormData.fromMap({
+                                "file": await MultipartFile.fromFile(files![i].path,
+                                    filename: basename(files![i].path)
+                                  //show only filename from path
+                                ),
+                              });
+
+                              response = await dio.post(
+                                uploadurl,
+                                data: formdata,
+                              );
+                              if (response!.statusCode == 200) {
+                                print(response.toString());
+                                //print response from server
+                              } else {
+                                print("Error during connection to server.");
+                              }
+                            }
                             // Navigator.push(
                             //   context,
                             //   MaterialPageRoute(builder: (context) => JobList()),
@@ -253,9 +289,40 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                       ),
                     ),
                   )),
-                  SizedBox(
-                    height: 20,
-                  )
+                  Container(
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          shape: new RoundedRectangleBorder(
+                            borderRadius:
+                            new BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        onPressed: () {
+                          selectFile();
+                        },
+                        icon: Icon(Icons.folder_open),
+                        label: Text("CHOOSE FILE"),
+                      )),
+                  SizedBox(height: 10.0),
+                  //if selectedfile is null then show empty container
+                  //if file is selected then show upload button
+                  if (files == null)
+                    Container()
+                  else
+                    for (int i = 0; i < files!.length; i++)
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.file_copy_rounded,
+                                color: Colors.yellow),
+                            Text(basename(files![i].path),
+                                style: TextStyle(
+                                    color: Colors.black))
+                          ],
+                        ),
+                      ),
+                  SizedBox(height: 10.0),
                 ],
               ),
             ),
@@ -263,6 +330,20 @@ class _DailyLogAddState extends State<DailyLogAdd> {
         ),
       ),
     );
+  }
+
+  selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'pdf', 'mp4'],
+    );
+    if (result != null) {
+      //if there is selected file
+      files = result.paths.map((path) => File(path!)).toList();
+    }
+    print(basename(files![0].path));
+    setState(() {});
   }
 
   void _handleMenuButtonPressed() {

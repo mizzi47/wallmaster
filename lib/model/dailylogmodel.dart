@@ -1,6 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:path/path.dart';
+import 'dart:typed_data';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
+import 'package:multi_image_picker_view/multi_image_picker_view.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DailyLogObject {
   final List scope;
@@ -23,6 +29,7 @@ class Request {
 }
 
 class DailyLogModel {
+  late Response response;
   Future<List> getDailyLog() async {
     List<String> dailylog_list = [
       'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
@@ -35,7 +42,7 @@ class DailyLogModel {
     ];
     return dailylog_list;
   }
-  Future<void> addDailyLog(List scope, String update, String pending, String issue, String logdate) async {
+  Future<void> addDailyLog(List scope, String update, String pending, String issue, String logdate, List<File>? files) async {
     DailyLogObject obj = new DailyLogObject(scope, update, pending, issue, logdate);
     // final url = Uri.parse('http://192.168.0.116/wallmaster/api/updateDailyLog');
     // final headers = {"Content-type": "application/json"};
@@ -43,7 +50,7 @@ class DailyLogModel {
     // final response = await post(url, headers: headers, body: json);
     // print('Status code: ${response.statusCode}');
     // print('Body: ${response.body}');
-    print(jsonEncode(obj));
+
   }
 
 }
