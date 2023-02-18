@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -13,6 +13,8 @@ import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
+DailyLogModel _dbdailylogmodel = DailyLogModel();
+
 class DailyLogAdd extends StatefulWidget {
   @override
   _DailyLogAddState createState() => _DailyLogAddState();
@@ -21,7 +23,6 @@ class DailyLogAdd extends StatefulWidget {
 class _DailyLogAddState extends State<DailyLogAdd> {
   //class initiation
   Dio dio = Dio();
-  DailyLogModel _md = DailyLogModel();
   final formkey = GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();
   final controller = MultiImagePickerController(
@@ -93,39 +94,6 @@ class _DailyLogAddState extends State<DailyLogAdd> {
               key: formkey,
               child: Column(
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text('Scope Of Work :')),
-                  ),
-                  Container(
-                    child: Column(
-                      children: List.generate(scope.length, (index) {
-                        return Row(
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: RoundCheckBox(
-                                  onTap: (selected) {
-                                    if(selected == true){
-                                      selectedscope.add(index);
-                                      print(selectedscope);
-                                    }
-                                    if(selected == false){
-                                      selectedscope.remove(index);
-                                      print(selectedscope);
-                                    }
-                                  },
-                                  size: 30,
-                                  uncheckedColor: Colors.white,
-                                )),
-                            Text(scope[index].toString())
-                          ],
-                        );
-                      }),
-                    ),
-                  ),
                   Container(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -218,7 +186,9 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                             print('null bro');
                           }else{
                             datePicked = datePickedNew;
-                            logdate.text=datePicked.toString().substring(0,10);
+                            var outputFormat = DateFormat('dd/MM/yyyy');
+                            var outputDate = outputFormat.format(datePicked);
+                            logdate.text=outputDate;
                           }
                         },
                         validator: (value) {
@@ -249,6 +219,40 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                     padding: const EdgeInsets.all(10),
                   ),
                   Divider(color: Colors.black),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text('SCOPE OF WORK :')),
+                  ),
+                  Container(
+                    child: Column(
+                      children: List.generate(scope.length, (index) {
+                        return Row(
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: RoundCheckBox(
+                                  onTap: (selected) {
+                                    if(selected == true){
+                                      selectedscope.add(index);
+                                      print(selectedscope);
+                                    }
+                                    if(selected == false){
+                                      selectedscope.remove(index);
+                                      print(selectedscope);
+                                    }
+                                  },
+                                  size: 30,
+                                  uncheckedColor: Colors.white,
+                                )),
+                            Text(scope[index].toString())
+                          ],
+                        );
+                      }),
+                    ),
+                  ),
+                  Divider(color: Colors.black),
                   Container(
                       child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -259,19 +263,19 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                             backgroundColor: Colors.green),
                         onPressed: () async {
                           selectedscope.sort();
-                          await _md.testapi();
-                          // if (formkey.currentState!.validate()) {
-                          //   showDialog(barrierDismissible: false,
-                          //     context:context,
-                          //     builder:(BuildContext context){
-                          //       return LoadingAnimationWidget.fourRotatingDots(
-                          //         color: Colors.white,
-                          //         size: 100,
-                          //       );
-                          //     },
-                          //   );
-                          //   await _md.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text.substring(0,10), controller.images).then((value) => Navigator.pop(context));
-                          // }
+                          //await _dbdailylogmodel.testapi();
+                          if (formkey.currentState!.validate()) {
+                            showDialog(barrierDismissible: false,
+                              context:context,
+                              builder:(BuildContext context){
+                                return LoadingAnimationWidget.fourRotatingDots(
+                                  color: Colors.white,
+                                  size: 100,
+                                );
+                              },
+                            );
+                            await _dbdailylogmodel.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text.substring(0,10), controller.images).then((value) => Navigator.pop(context));
+                          }
                         },
                         child: Text('Submit'),
                       ),

@@ -5,22 +5,15 @@ import 'package:wallmaster/widgets/imagesliders.dart' as testslider;
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
+class DailyLogView extends StatelessWidget {
+  DailyLogView(
+      {required this.dailylogdata});
 
+  var dailylogdata;
 
-class DailyLogView extends StatefulWidget {
-  @override
-  _DailyLogViewState createState() => _DailyLogViewState();
-}
-
-class _DailyLogViewState extends State<DailyLogView> {
   final formkey = new GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();
-  TextEditingController scope = new TextEditingController();
-  TextEditingController update = new TextEditingController();
-  TextEditingController pending = new TextEditingController();
-  TextEditingController issue = new TextEditingController();
   var datePicked;
-
   @override
   Widget build(BuildContext context) {
     return AdvancedDrawer(
@@ -67,7 +60,6 @@ class _DailyLogViewState extends State<DailyLogView> {
                       child: TextField(
                         readOnly: true,
                         maxLines: null,
-                        controller: scope,
                         obscureText: false,
                         decoration: InputDecoration(
                             icon: Icon(Icons.account_circle_sharp),
@@ -83,61 +75,55 @@ class _DailyLogViewState extends State<DailyLogView> {
                   ),
                   Container(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: TextField(
-                        readOnly: true,
-                        maxLines: null,
-                        controller: update,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            icon: Icon(Icons.account_circle_sharp),
-                            filled: true,
-                            fillColor: Colors.white,
-                            contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "The update is bla bla bla",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
+                      padding: const EdgeInsets.all(5),
+                      child: Card(
+                        margin: const EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: Icon(Icons.update_rounded),
+                              title: const Text('Update:'),
+                              subtitle: Text(dailylogdata['update']),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   Container(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: TextField(
-                        readOnly: true,
-                        maxLines: null,
-                        controller: pending,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            icon: Icon(Icons.account_circle_sharp),
-                            filled: true,
-                            fillColor: Colors.white,
-                            contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "The pending is no screws attached in the wall",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
+                      padding: const EdgeInsets.all(5),
+                      child: Card(
+                        margin: const EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: Icon(Icons.pending_rounded),
+                              title: const Text('Pending:'),
+                              subtitle: Text(dailylogdata['pending']),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   Container(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: TextField(
-                        readOnly: true,
-                        maxLines: null,
-                        controller: issue,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            icon: Icon(Icons.account_circle_sharp),
-                            filled: true,
-                            fillColor: Colors.white,
-                            contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "water flowing inside mosaic of the second room",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
+                      padding: const EdgeInsets.all(5),
+                      child: Card(
+                        margin: const EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: Icon(Icons.security_update_warning_sharp),
+                              title: const Text('Issue:'),
+                              subtitle: Text(dailylogdata['issue']),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

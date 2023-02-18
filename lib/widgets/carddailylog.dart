@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:path/path.dart';
+import 'package:wallmaster/screens/dailylog/dailylog_list.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -10,25 +11,13 @@ import 'package:wallmaster/screens/dailylog/dailylog_view.dart';
 
 class CardDailyLog extends StatelessWidget {
   CardDailyLog(
-      {required this.title,
-        required this.description,
-        required this.assign,
-        required this.assignemail,
-        required this.priority,
-        required this.taskno});
+      {required this.dailylogdata,});
 
-  final String title;
-  final String description;
-  final String assign;
-  final String assignemail;
-  final String taskno;
-  final int priority;
-
-  String hasService = '';
-  String hasProduct = '';
+  var dailylogdata;
 
   @override
   Widget build(BuildContext context) {
+    print(dailylogdata);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -38,7 +27,7 @@ class CardDailyLog extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    DailyLogView()),
+                    DailyLogView(dailylogdata: dailylogdata)),
           );
         },
         duration: Duration(milliseconds: 150),
@@ -66,7 +55,7 @@ class CardDailyLog extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        dailylogdata['logdate'],
                         style: TextStyle(color: Colors.white, fontSize: 15),
                       ),
                       Divider(color: Colors.black),
@@ -84,14 +73,14 @@ class CardDailyLog extends StatelessWidget {
                           children: <Widget>[
                             Icon(Icons.account_box_rounded,
                                 color: Colors.yellow),
-                            Text(assign, style: TextStyle(color: Colors.white))
+                            Text('testname', style: TextStyle(color: Colors.white))
                           ],
                         ),
                       ),
                       Row(
                         children: <Widget>[
                           Icon(Icons.type_specimen_rounded, color: Colors.yellow),
-                          Text(description,
+                          Text(dailylogdata['scope'],
                               style: TextStyle(color: Colors.white))
                         ],
                       ),
@@ -104,54 +93,5 @@ class CardDailyLog extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildProductList(
-      List list, String hasProduct, List prod, BuildContext context) {
-    if (hasProduct == 'yes') {
-      return Column(
-        children: [
-          Container(
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                    child: Text(
-                      'Products: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )),
-              ],
-            ),
-          ),
-          for (var i = 0; i < list.length; i++)
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Flexible(
-                      child: Text(
-                        '${i + 1}. ${list[i]}',
-                        style: TextStyle(fontSize: 20),
-                      )),
-                ],
-              ),
-            ),
-        ],
-      );
-    } else {
-      return Column(
-        children: [
-          Container(
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                    child: Text(
-                      'No Products Found',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )),
-              ],
-            ),
-          ),
-        ],
-      );
-    }
   }
 }
