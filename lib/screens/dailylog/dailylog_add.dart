@@ -5,9 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:material_dialogs/dialogs.dart';
+import 'package:material_dialogs/widgets/buttons/icon_button.dart';
+import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:path/path.dart';
 import 'package:wallmaster/model/dailylogmodel.dart';
+import 'package:wallmaster/screens/dailylog/dailylog_list.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -274,7 +278,32 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                                 );
                               },
                             );
-                            await _dbdailylogmodel.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text.substring(0,10), controller.images).then((value) => Navigator.pop(context));
+                            await _dbdailylogmodel.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text.substring(0,10), controller.images)
+                                .then((value) => Navigator.pop(context)).then((value) {
+                                  return Dialogs.materialDialog(
+                                      barrierDismissible: false,
+                                      msg: 'Daily log data saved successfully',
+                                      title: "Success!",
+                                      color: Colors.white,
+                                      context: context,
+                                      actions: [
+                                        IconsButton(
+                                          onPressed: () {
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext context) =>
+                                                      InitDataDailyLog()), (route) => false,
+                                            );
+                                          },
+                                          text: 'Okay',
+                                          iconData: Icons.file_download_done,
+                                          color: Colors.green,
+                                          textStyle: TextStyle(color: Colors.white),
+                                          iconColor: Colors.white,
+                                        ),
+                                      ]);
+                                });
                           }
                         },
                         child: Text('Submit'),

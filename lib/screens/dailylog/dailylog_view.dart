@@ -7,15 +7,17 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
 class DailyLogView extends StatelessWidget {
   DailyLogView(
-      {required this.dailylogdata});
+      {required this.dailylogdata, required this.dailylogfiles});
 
   var dailylogdata;
+  var dailylogfiles;
 
   final formkey = new GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();
   var datePicked;
   @override
   Widget build(BuildContext context) {
+    print(dailylogfiles);
     return AdvancedDrawer(
       backdropColor: Colors.blueGrey,
       controller: _advancedDrawerController,
@@ -127,7 +129,7 @@ class DailyLogView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  testslider.sliders(context)
+                  testslider.sliders(context, dailylogfiles)
                 ],
               ),),
           ),

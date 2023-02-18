@@ -2,18 +2,23 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:path/path.dart';
+import 'package:wallmaster/model/dailylogmodel.dart';
 import 'package:wallmaster/screens/dailylog/dailylog_list.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:wallmaster/screens/dailylog/dailylog_view.dart';
 
+DailyLogModel _dbdailylogmodel = DailyLogModel();
+
 class CardDailyLog extends StatelessWidget {
   CardDailyLog(
       {required this.dailylogdata,});
 
   var dailylogdata;
+  var dailylogfiles;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +28,24 @@ class CardDailyLog extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Bounce(
         onPressed: () async {
+          showDialog(barrierDismissible: false,
+            context:context,
+            builder:(BuildContext context){
+              return LoadingAnimationWidget.fourRotatingDots(
+                color: Colors.white,
+                size: 100,
+              );
+            },
+          );
+          await _dbdailylogmodel.getDailyLogFiles(dailylogdata['dailylog_id']).then((value) {
+            dailylogfiles = value;
+            Navigator.pop(context);
+         });
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    DailyLogView(dailylogdata: dailylogdata)),
+                    DailyLogView(dailylogdata: dailylogdata, dailylogfiles: dailylogfiles)),
           );
         },
         duration: Duration(milliseconds: 150),

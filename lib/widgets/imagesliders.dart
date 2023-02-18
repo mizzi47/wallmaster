@@ -16,8 +16,8 @@ AlertDialog alert = AlertDialog(
   title: Text('Hi'),
 );
 
-Widget sliders(BuildContext context) {
-  final List<Widget> imageSliders = imgList
+Widget sliders(BuildContext context, List<String> dailylogfileList) {
+  final List<Widget> imageSliders = dailylogfileList
       .map((item) => Container(
             child: Container(
               margin: EdgeInsets.all(5.0),
@@ -45,24 +45,16 @@ Widget sliders(BuildContext context) {
                               vertical: 10.0, horizontal: 20.0),
                           child: Row(
                             children: [
-                              Text(
-                                'No. ${imgList.indexOf(item)} image',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return alert;
-                                      },
-                                    );
-                                  },
-                                  icon: Icon(Icons.remove_red_eye, color: Colors.white,))
+                              // IconButton(
+                              //     onPressed: () {
+                              //       showDialog(
+                              //         context: context,
+                              //         builder: (BuildContext context) {
+                              //           return alert;
+                              //         },
+                              //       );
+                              //     },
+                              //     icon: Icon(Icons.remove_red_eye, color: Colors.white,))
                             ],
                           ),
                         ),
