@@ -1,16 +1,55 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:wallmaster/model/dailylogmodel.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
 import 'package:wallmaster/widgets/imagesliders.dart' as testslider;
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
-class DailyLogView extends StatelessWidget {
-  DailyLogView(
-      {required this.dailylogdata, required this.dailylogfiles});
+class InitDailyLogView extends StatelessWidget {
+  var dailylogdata;
+  InitDailyLogView(
+      {required this.dailylogdata});
+  @override
+  Widget build(BuildContext context) {
+    DailyLogModel _dbdailylogmodel = DailyLogModel();
+    return FutureBuilder(
+        future: _dbdailylogmodel.getDailyLogFiles(dailylogdata['dailylog_id']),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return DailyLogViewPage(getdailylogdata: dailylogdata, getdailylogfiles: snapshot.data);
+          } else {
+            return LoadingAnimationWidget.fourRotatingDots(
+              color: Colors.white,
+              size: 100,
+            );
+          }
+        },
+      );
+  }
+}
+class DailyLogViewPage extends StatefulWidget {
+  var getdailylogdata;
+  var getdailylogfiles;
+      DailyLogViewPage({ this.getdailylogdata, this.getdailylogfiles });
+  @override
+  _DailyLogViewPageState createState() => _DailyLogViewPageState();
+}
 
+class _DailyLogViewPageState extends State<DailyLogViewPage> {
+// class DailyLogView extends StatelessWidget {
+//   DailyLogView(
+//       {required this.dailylogdata, required this.dailylogfiles});
   var dailylogdata;
   var dailylogfiles;
+  @override
+  void initState() {
+    super.initState();
+    // access the property 'data' using 'widget.data'
+    dailylogdata = widget.getdailylogdata;
+    dailylogfiles = widget.getdailylogfiles;
+  }
 
   final formkey = new GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();

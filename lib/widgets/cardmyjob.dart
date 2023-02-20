@@ -1,11 +1,5 @@
-
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
-import 'package:path/path.dart';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
-
 import 'package:wallmaster/screens/dailylog/dailylog_list.dart';
 
 class CardMyJob extends StatelessWidget {

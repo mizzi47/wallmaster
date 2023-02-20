@@ -5,10 +5,43 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:wallmaster/widgets/cardmyjob.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
 import 'package:wallmaster/model/jobmodel.dart' as jobmodel;
 
+class InitDataJobFunction {
+  static Future initialize() async {
+    await _loadData();
+  }
+
+  static _loadData() async {
+  }
+}
+
+class InitDataJob extends StatelessWidget {
+  final Future _initFuture = InitDataJobFunction.initialize();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Initialization',
+      home: FutureBuilder(
+        future: _initFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return JobList();
+          } else {
+            return LoadingAnimationWidget.fourRotatingDots(
+              color: Colors.white,
+              size: 100,
+            );
+          }
+        },
+      ),
+    );
+  }
+}
 
 class JobList extends StatefulWidget {
   @override

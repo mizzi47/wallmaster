@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:material_dialogs/dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_button.dart';
-import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:path/path.dart';
 import 'package:wallmaster/model/dailylogmodel.dart';
@@ -293,7 +291,7 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (BuildContext context) =>
-                                                      InitDataDailyLog()), (route) => false,
+                                                      DailyLogList()), (route) => false,
                                             );
                                           },
                                           text: 'Okay',

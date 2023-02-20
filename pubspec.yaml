@@ -60,6 +60,7 @@ dependencies:
   path_provider: ^2.0.12
   images_picker: ^1.2.11
   material_dialogs: ^1.1.4
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_test:

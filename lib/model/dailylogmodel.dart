@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DailyLogObject {
   final List scope;
@@ -44,7 +45,7 @@ class Request {
 }
 
 class DailyLogModel {
-  String hostname = 'http://192.168.1.138/wallmaster';
+  String hostname = 'http://192.168.0.116/wallmaster';
 
   //String hostname = 'http://192.168.0.116/wallmaster';
   Dio dio = new Dio();
@@ -121,6 +122,8 @@ class DailyLogModel {
   }
 
   Future<List> getDailyLogFiles(var dailylog_id) async {
+    final prefs = await SharedPreferences.getInstance();
+    var _userid = await prefs.getInt('_userid');
     Response response = await dio.post(
       hostname+'/dailylog/getDailyLogFiles',
       data: {'dailylog_id': dailylog_id},
@@ -134,5 +137,30 @@ class DailyLogModel {
       dailylog_list.add(hostname+'/uploads/'+dlraw['file_name']);
     }
     return dailylog_list;
+  }
+
+  Future<String> userlogin(var username, var password) async {
+    final prefs = await SharedPreferences.getInstance();
+    Response response = await dio.post(
+      hostname+'/welcome/auth_mobile',
+      data: {'username': username, 'password': password},
+      options: Options(headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+      }),
+    );
+    List user = jsonDecode(response.toString());
+    print(password);
+    if(user.isEmpty){
+      await prefs.setBool('_islogged', false);
+      print('no user');
+      return 'Invalid';
+    }else{
+      print('has user');
+      await prefs.setBool('_islogged', true);
+      await prefs.setInt('_userid', int.parse(user[0]['id']));
+      await prefs.setStringList('_userdata', <String>[user[0]['username'], user[0]['role'], user[0]['email']]);
+      return 'Succeed';
+    }
+    return'dsd';
   }
 }

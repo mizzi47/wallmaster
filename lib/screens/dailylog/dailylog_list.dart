@@ -1,55 +1,15 @@
 import 'dart:core';
-import 'dart:core';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallmaster/model/dailylogmodel.dart';
 import 'package:wallmaster/screens/dailylog/dailylog_add.dart';
 import 'package:wallmaster/widgets/carddailylog.dart';
-import 'package:wallmaster/widgets/cardmyjob.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
-import 'package:wallmaster/screens/dailylog/dailylog_view.dart';
-import 'package:wallmaster/model/dailylogmodel.dart' as dailylogmodel;
 
 DailyLogModel _dbdailylogmodel = DailyLogModel();
-late Future<List> dailyloglist;
-
-class InitFunction {
-  static Future initialize() async {
-    await _loadData();
-  }
-
-  static _loadData() async {
-    dailyloglist = _dbdailylogmodel.getDailyLog();
-  }
-}
-
-class InitDataDailyLog extends StatelessWidget {
-  final Future _initFuture = InitFunction.initialize();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Initialization',
-      home: FutureBuilder(
-        future: _initFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return DailyLogList();
-          } else {
-            return LoadingAnimationWidget.fourRotatingDots(
-              color: Colors.white,
-              size: 100,
-            );
-          }
-        },
-      ),
-    );
-  }
-}
 
 class DailyLogList extends StatefulWidget {
   @override
@@ -63,8 +23,6 @@ class _DailyLogListState extends State<DailyLogList> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
 
     return AdvancedDrawer(
       backdropColor: Colors.blueGrey,
@@ -89,12 +47,9 @@ class _DailyLogListState extends State<DailyLogList> {
             ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.withOpacity(0.5)),
                 onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            DailyLogAdd()),
-                  );
+                  Navigator.of(context,rootNavigator: true).push(MaterialPageRoute (
+                    builder: (BuildContext context) => DailyLogAdd(),
+                  ),);
                 },
                 child: Icon(Icons.add_box_rounded)
             )
@@ -122,7 +77,7 @@ class _DailyLogListState extends State<DailyLogList> {
               child: FutureBuilder<List>(
                   future: _dbdailylogmodel.getDailyLog(),
                   builder: (context, snapshot) {
-                    if (snapshot.hasError) return Text(snapshot.toString());
+                    if (snapshot.hasError) return Text('Check Your Internet Connections!');
                     if (snapshot.hasData) {
                       return _buildMyItem(snapshot.data, context);
                     } else {
@@ -157,8 +112,6 @@ class _DailyLogListState extends State<DailyLogList> {
     );
   }
   void _handleMenuButtonPressed() {
-    // NOTICE: Manage Advanced Drawer state through the Controller.
-    // _advancedDrawerController.value = AdvancedDrawerValue.visible();
     _advancedDrawerController.showDrawer();
   }
 }

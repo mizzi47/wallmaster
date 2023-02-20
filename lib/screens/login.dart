@@ -1,6 +1,8 @@
 //Packages import
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wallmaster/model/dailylogmodel.dart';
 import 'package:wallmaster/screens/dailylog/job_list.dart';
 
 //State create
@@ -10,8 +12,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  DailyLogModel _dbdailylogmodel = DailyLogModel();
   final formkey = GlobalKey<FormState>();
-
   TextEditingController username = new TextEditingController();
   TextEditingController password = new TextEditingController();
 
@@ -19,23 +21,6 @@ class _LoginState extends State<Login> {
   initState() {
     super.initState();
   }
-
-  //Widget Builder
-  Widget _buildButton(
-          {required String label,
-          VoidCallback? onPressed,
-          required Color cl}) =>
-      Padding(
-          padding: EdgeInsets.all(12.0),
-          child: MaterialButton(
-            onPressed: onPressed,
-            color: cl.withOpacity(0.8),
-            disabledColor: cl.withOpacity(0.5),
-            child: Text(
-              label,
-              style: const TextStyle(color: Colors.white),
-            ),
-          ));
 
   @override
   Widget build(BuildContext context) {
@@ -139,12 +124,19 @@ class _LoginState extends State<Login> {
                                             Container(
                                                 child: ElevatedButton(
                                                   style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                                                  onPressed: (){
+                                                  onPressed: () async {
                                                       if (formkey.currentState!.validate()) {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(builder: (context) => JobList()),
-                                                        );
+                                                        var isLogin = await _dbdailylogmodel.userlogin(username.text, password.text);
+                                                        print(isLogin);
+                                                        if(isLogin == 'Succeed'){
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => JobList()),
+                                                          );
+                                                        }
+                                                        else {
+                                                          print(isLogin);
+                                                        }
                                                       }
                                                   },
                                                   child: Text('Login'),

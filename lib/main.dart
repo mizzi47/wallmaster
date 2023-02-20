@@ -3,8 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallmaster/firebase_options.dart';
+import 'package:wallmaster/screens/dailylog/job_list.dart';
 import 'package:wallmaster/screens/login.dart';
+
+var _islogged;
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
@@ -16,6 +21,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  _islogged = prefs.getBool('_islogged');
   OneSignal.shared.setAppId("3d97249b-57be-4a02-a129-a8fd8fd49ed1");
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
@@ -50,10 +57,19 @@ print(_firebaseMessagingBackgroundHandler);
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Login(),
+    print(_islogged);
+    if(_islogged == null){
+      return MaterialApp(
+          home: Login(),
     );
+    }else{
+      return MaterialApp(
+          home: JobList(),
+    );
+    }
+
   }
 }
