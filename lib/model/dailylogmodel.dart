@@ -11,12 +11,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DailyLogObject {
   final List scope;
+  final int job_id, user_id;
   final String update, pending, issue, logdate;
 
-  DailyLogObject(
-      this.scope, this.update, this.pending, this.issue, this.logdate);
+  DailyLogObject(this.job_id, this.user_id, this.scope, this.update,
+      this.pending, this.issue, this.logdate);
 
   Map toJson() => {
+        'job_id': job_id,
+        'user_id': user_id,
         'scope': scope,
         'update': update,
         'pending': pending,
@@ -45,46 +48,57 @@ class Request {
 }
 
 class DailyLogModel {
-  String hostname = 'http://192.168.0.116/wallmaster';
-
   //String hostname = 'http://192.168.0.116/wallmaster';
+
+  String hostname = 'http://192.168.1.138/wallmaster';
   Dio dio = new Dio();
 
-  Future<void> testapi() async {
-    Response response = await dio.post(
-      hostname+'/dailylog/getDailyLog',
-      options: Options(headers: {
-        HttpHeaders.contentTypeHeader: "application/json",
-      }),
-    );
-    List dailylog_list = jsonDecode(response.toString());
-    print(dailylog_list[0]['update']);
-  }
+  // Future<void> testapi() async {
+  //   Response response = await dio.post(
+  //     hostname+'/dailylog/getDailyLog',
+  //     options: Options(headers: {
+  //       HttpHeaders.contentTypeHeader: "application/json",
+  //     }),
+  //   );
+  //   List dailylog_list = jsonDecode(response.toString());
+  //   print(dailylog_list[0]['update']);
+  // }
 
-  Future<List> getDailyLog() async {
+  Future<List> getDailyLog(int job_id) async {
+    final prefs = await SharedPreferences.getInstance();
+    var user_id = await prefs.getInt('_userid');
     Response response = await dio.post(
-      hostname+'/dailylog/getDailyLog',
+      hostname + '/dailylog/getDailyLog',
       options: Options(headers: {
         HttpHeaders.contentTypeHeader: "application/json",
       }),
+      data: {'job_id': job_id, 'user_id': user_id},
     );
+    print(response.toString());
     List dailylog_list = jsonDecode(response.toString());
     return dailylog_list;
   }
 
-  Future<void> addDailyLog(List scope, String update, String pending,
-      String issue, String logdate, Iterable<ImageFile> images) async {
+  Future<void> addDailyLog(
+      int job_id,
+      List scope,
+      String update,
+      String pending,
+      String issue,
+      String logdate,
+      Iterable<ImageFile> images) async {
+    final prefs = await SharedPreferences.getInstance();
+    var user_id = await prefs.getInt('_userid');
     DailyLogObject obj =
-        new DailyLogObject(scope, update, pending, issue, logdate);
+        new DailyLogObject(job_id, user_id!, scope, update, pending, issue, logdate);
 
     List listImages = images.toList();
 
-    Response addresponse =
-        await dio.post(hostname+'/dailylog/addDailyLog',
-            options: Options(headers: {
-              HttpHeaders.contentTypeHeader: "application/json",
-            }),
-            data: jsonEncode(obj.toJson()));
+    Response addresponse = await dio.post(hostname + '/dailylog/addDailyLog',
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+        }),
+        data: jsonEncode(obj.toJson()));
     print('inserted id: ' + addresponse.toString());
 
     //uploaddata
@@ -96,7 +110,7 @@ class DailyLogModel {
             filename: createdfile_name),
       });
       Response fileupload_response = await dio.post(
-        hostname+'/api/fileupload.php',
+        hostname + '/api/fileupload.php',
         data: formdata,
         onSendProgress: (int sent, int total) {
           print('$sent $total');
@@ -108,13 +122,12 @@ class DailyLogModel {
             createdfile_name,
             listImages[i].extension);
         print(jsonEncode(fobj.toJson()));
-        Response fileuploaddata_response = await dio.post(
-            hostname+'/dailylog/addDailyLogFiles',
-            options: Options(headers: {
-              HttpHeaders.contentTypeHeader: "application/json",
-            }),
-            data: jsonEncode(fobj.toJson()));
-        //print response from server
+        Response fileuploaddata_response =
+            await dio.post(hostname + '/dailylog/addDailyLogFiles',
+                options: Options(headers: {
+                  HttpHeaders.contentTypeHeader: "application/json",
+                }),
+                data: jsonEncode(fobj.toJson()));
       } else {
         print("Error during connection to server.");
       }
@@ -125,7 +138,7 @@ class DailyLogModel {
     final prefs = await SharedPreferences.getInstance();
     var _userid = await prefs.getInt('_userid');
     Response response = await dio.post(
-      hostname+'/dailylog/getDailyLogFiles',
+      hostname + '/dailylog/getDailyLogFiles',
       data: {'dailylog_id': dailylog_id},
       options: Options(headers: {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -134,7 +147,7 @@ class DailyLogModel {
     List dailylog_list_raw = jsonDecode(response.toString());
     List<String> dailylog_list = [];
     for (var dlraw in dailylog_list_raw) {
-      dailylog_list.add(hostname+'/uploads/'+dlraw['file_name']);
+      dailylog_list.add(hostname + '/uploads/' + dlraw['file_name']);
     }
     return dailylog_list;
   }
@@ -142,25 +155,24 @@ class DailyLogModel {
   Future<String> userlogin(var username, var password) async {
     final prefs = await SharedPreferences.getInstance();
     Response response = await dio.post(
-      hostname+'/welcome/auth_mobile',
+      hostname + '/welcome/auth_mobile',
       data: {'username': username, 'password': password},
       options: Options(headers: {
         HttpHeaders.contentTypeHeader: "application/json",
       }),
     );
     List user = jsonDecode(response.toString());
-    print(password);
-    if(user.isEmpty){
+    if (user.isEmpty) {
       await prefs.setBool('_islogged', false);
-      print('no user');
       return 'Invalid';
-    }else{
-      print('has user');
+    } else {
       await prefs.setBool('_islogged', true);
       await prefs.setInt('_userid', int.parse(user[0]['id']));
-      await prefs.setStringList('_userdata', <String>[user[0]['username'], user[0]['role'], user[0]['email']]);
+      await prefs.setInt('_userrole', int.parse(user[0]['role']));
+      await prefs.setStringList(
+          '_userdata', <String>[user[0]['username'], user[0]['email']]);
       return 'Succeed';
     }
-    return'dsd';
+    return 'dsd';
   }
 }

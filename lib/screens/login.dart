@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallmaster/model/dailylogmodel.dart';
-import 'package:wallmaster/screens/dailylog/job_list.dart';
+import 'package:wallmaster/screens/job/job_list.dart';
 
 //State create
 class Login extends StatefulWidget {

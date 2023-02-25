@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallmaster/firebase_options.dart';
-import 'package:wallmaster/screens/dailylog/job_list.dart';
+import 'package:wallmaster/screens/job/job_list.dart';
 import 'package:wallmaster/screens/login.dart';
 
 var _islogged;

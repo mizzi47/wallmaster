@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallmaster/screens/dailylog/dailylog_view.dart';
-import 'package:wallmaster/screens/dailylog/job_list.dart';
+import 'package:wallmaster/screens/job/job_list.dart';
 import 'package:wallmaster/screens/login.dart';
 import 'package:wallmaster/screens/schedule/scheduleview.dart';
 

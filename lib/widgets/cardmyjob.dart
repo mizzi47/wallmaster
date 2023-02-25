@@ -4,19 +4,9 @@ import 'package:wallmaster/screens/dailylog/dailylog_list.dart';
 
 class CardMyJob extends StatelessWidget {
   CardMyJob(
-      {required this.title,
-        required this.description,
-        required this.assign,
-        required this.assignemail,
-        required this.priority,
-        required this.taskno});
+      {required this.jobdata});
 
-  final String title;
-  final String description;
-  final String assign;
-  final String assignemail;
-  final String taskno;
-  final int priority;
+  var jobdata;
 
   String hasService = '';
   String hasProduct = '';
@@ -32,7 +22,7 @@ class CardMyJob extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    DailyLogList()),
+                    DailyLogList(int.parse(jobdata['job_id']))),
           );
         },
         duration: Duration(milliseconds: 150),
@@ -60,7 +50,7 @@ class CardMyJob extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        jobdata['job_name'],
                         style: TextStyle(color: Colors.white, fontSize: 15),
                       ),
                       Divider(color: Colors.black),
@@ -78,14 +68,14 @@ class CardMyJob extends StatelessWidget {
                           children: <Widget>[
                             Icon(Icons.account_box_rounded,
                                 color: Colors.yellow),
-                            Text(assign, style: TextStyle(color: Colors.white))
+                            Text(jobdata['owner'], style: TextStyle(color: Colors.white))
                           ],
                         ),
                       ),
                       Row(
                         children: <Widget>[
                           Icon(Icons.date_range, color: Colors.yellow),
-                          Text(description,
+                          Text('description',
                               style: TextStyle(color: Colors.white))
                         ],
                       ),

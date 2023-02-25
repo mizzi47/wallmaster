@@ -2,32 +2,35 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wallmaster/model/dailylogmodel.dart';
-import 'package:wallmaster/screens/dailylog/dailylog_add.dart';
-import 'package:wallmaster/widgets/carddailylog.dart';
+import 'package:wallmaster/model/jobmodel.dart';
+import 'package:wallmaster/widgets/cardmyjob.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
+import 'package:wallmaster/model/jobmodel.dart' as jobmodel;
 
-DailyLogModel _dbdailylogmodel = DailyLogModel();
+JobModel _dbjobmodel = JobModel();
 
-class DailyLogList extends StatefulWidget {
-  final int job_id;
-
-  const DailyLogList(this.job_id);
-
+class JobList extends StatefulWidget {
   @override
-  _DailyLogListState createState() => _DailyLogListState();
+  _JobListState createState() => _JobListState();
 }
 
-class _DailyLogListState extends State<DailyLogList> {
+class _JobListState extends State<JobList> {
   final formkey = new GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();
   final ScrollController _firstController = ScrollController();
 
+  var spinkit = SpinKitRotatingCircle(
+    color: Colors.white,
+    size: 50.0,
+  );
+
   @override
   Widget build(BuildContext context) {
-    print(widget.job_id);
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
     return AdvancedDrawer(
       backdropColor: Colors.blueGrey,
       controller: _advancedDrawerController,
@@ -46,21 +49,7 @@ class _DailyLogListState extends State<DailyLogList> {
         backgroundColor: Colors.blueGrey,
         appBar: AppBar(
           backgroundColor: Colors.blue.withOpacity(0.2),
-          title: const Text('Daily Log List'),
-          actions: [
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.withOpacity(0.5)),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          DailyLogAdd(widget.job_id),
-                    ),
-                  );
-                },
-                child: Icon(Icons.add_box_rounded))
-          ],
+          title: const Text('My Job List'),
           leading: IconButton(
             onPressed: _handleMenuButtonPressed,
             icon: ValueListenableBuilder<AdvancedDrawerValue>(
@@ -79,13 +68,12 @@ class _DailyLogListState extends State<DailyLogList> {
         ),
         body: Stack(
           fit: StackFit.expand,
-          children: <Widget>[
+          children: <Widget> [
             Container(
               child: FutureBuilder<List>(
-                  future: _dbdailylogmodel.getDailyLog(widget.job_id),
+                  future: _dbjobmodel.getJob(),
                   builder: (context, snapshot) {
-                    if (snapshot.hasError)
-                      return Text(snapshot.stackTrace.toString());
+                    if (snapshot.hasError) return Text(snapshot.toString());
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
                         return Column(
@@ -111,7 +99,6 @@ class _DailyLogListState extends State<DailyLogList> {
       ),
     );
   }
-
   Widget _buildMyItem(List? list, BuildContext context) {
     return Scrollbar(
       thickness: 10,
@@ -122,13 +109,16 @@ class _DailyLogListState extends State<DailyLogList> {
         shrinkWrap: true,
         itemCount: list?.length,
         itemBuilder: (BuildContext context, int index) {
-          return CardDailyLog(dailylogdata: list![index]);
+            return CardMyJob(
+              jobdata: list![index],
+            );
         },
       ),
     );
   }
-
   void _handleMenuButtonPressed() {
+    // NOTICE: Manage Advanced Drawer state through the Controller.
+    // _advancedDrawerController.value = AdvancedDrawerValue.visible();
     _advancedDrawerController.showDrawer();
   }
 }

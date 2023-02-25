@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
 
@@ -23,11 +22,6 @@ class _ScheduleViewState extends State<ScheduleView> {
     // _advancedDrawerController.value = AdvancedDrawerValue.visible();
     _advancedDrawerController.showDrawer();
   }
-
-  var spinkit = SpinKitRotatingCircle(
-    color: Colors.white,
-    size: 50.0,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +72,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                   border: Border.all(color: Colors.black26),
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               child: SfCalendar(
-                view: CalendarView.schedule,
+                view: CalendarView.month,
                 headerStyle: CalendarHeaderStyle(
                     textStyle: TextStyle(color: Colors.black, fontSize: 20),
                     backgroundColor: Colors.grey),

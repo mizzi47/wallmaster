@@ -8,6 +8,7 @@ import 'package:material_dialogs/dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallmaster/model/dailylogmodel.dart';
 import 'package:wallmaster/screens/dailylog/dailylog_list.dart';
 import 'package:wallmaster/widgets/drawer.dart' as constant_drawer;
@@ -18,6 +19,8 @@ import 'package:roundcheckbox/roundcheckbox.dart';
 DailyLogModel _dbdailylogmodel = DailyLogModel();
 
 class DailyLogAdd extends StatefulWidget {
+  final int job_id;
+  const DailyLogAdd(this.job_id);
   @override
   _DailyLogAddState createState() => _DailyLogAddState();
 }
@@ -264,6 +267,8 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green),
                         onPressed: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          var job_id = prefs.getInt('current_job_id');
                           selectedscope.sort();
                           //await _dbdailylogmodel.testapi();
                           if (formkey.currentState!.validate()) {
@@ -276,7 +281,7 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                                 );
                               },
                             );
-                            await _dbdailylogmodel.addDailyLog(selectedscope, update.text, pending.text, issue.text, logdate.text.substring(0,10), controller.images)
+                            await _dbdailylogmodel.addDailyLog(widget.job_id, selectedscope, update.text, pending.text, issue.text, logdate.text.substring(0,10), controller.images)
                                 .then((value) => Navigator.pop(context)).then((value) {
                                   return Dialogs.materialDialog(
                                       barrierDismissible: false,
@@ -287,11 +292,13 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                                       actions: [
                                         IconsButton(
                                           onPressed: () {
-                                            Navigator.pushAndRemoveUntil(
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (BuildContext context) =>
-                                                      DailyLogList()), (route) => false,
+                                                      DailyLogList(widget.job_id)),
                                             );
                                           },
                                           text: 'Okay',
