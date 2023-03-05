@@ -20,7 +20,9 @@ DailyLogModel _dbdailylogmodel = DailyLogModel();
 
 class DailyLogAdd extends StatefulWidget {
   final int job_id;
+
   const DailyLogAdd(this.job_id);
+
   @override
   _DailyLogAddState createState() => _DailyLogAddState();
 }
@@ -36,6 +38,7 @@ class _DailyLogAddState extends State<DailyLogAdd> {
     withData: true,
     withReadStream: true,
   );
+
   //form initiation
   TextEditingController update = TextEditingController();
   TextEditingController pending = TextEditingController();
@@ -50,8 +53,10 @@ class _DailyLogAddState extends State<DailyLogAdd> {
     'Wall Finishes',
     'Floor Finishes',
     'Carpentry Finishes',
-    'Steel/aluminium Finishes'
+    'Steel/aluminium Finishes',
+    'Others'
   ];
+
   //files upload declaration
   var selectedfile;
   List<File>? files;
@@ -180,20 +185,21 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                       child: TextFormField(
                         onTap: () async {
                           FocusScope.of(context).requestFocus(FocusNode());
-                          var datePickedNew = await DatePicker.showSimpleDatePicker(
+                          var datePickedNew =
+                              await DatePicker.showSimpleDatePicker(
                             context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(1960),
                             dateFormat: "dd-MM-yyyy",
                             looping: true,
                           );
-                          if(datePickedNew == null){
+                          if (datePickedNew == null) {
                             print('null bro');
-                          }else{
+                          } else {
                             datePicked = datePickedNew;
-                            var outputFormat = DateFormat('dd/MM/yyyy');
+                            var outputFormat = DateFormat('yyyy/MM/dd');
                             var outputDate = outputFormat.format(datePicked);
-                            logdate.text=outputDate;
+                            logdate.text = outputDate;
                           }
                         },
                         validator: (value) {
@@ -239,11 +245,11 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                                 padding: const EdgeInsets.all(10.0),
                                 child: RoundCheckBox(
                                   onTap: (selected) {
-                                    if(selected == true){
+                                    if (selected == true) {
                                       selectedscope.add(index);
                                       print(selectedscope);
                                     }
-                                    if(selected == false){
+                                    if (selected == false) {
                                       selectedscope.remove(index);
                                       print(selectedscope);
                                     }
@@ -272,43 +278,53 @@ class _DailyLogAddState extends State<DailyLogAdd> {
                           selectedscope.sort();
                           //await _dbdailylogmodel.testapi();
                           if (formkey.currentState!.validate()) {
-                            showDialog(barrierDismissible: false,
-                              context:context,
-                              builder:(BuildContext context){
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
                                 return LoadingAnimationWidget.fourRotatingDots(
                                   color: Colors.white,
                                   size: 100,
                                 );
                               },
                             );
-                            await _dbdailylogmodel.addDailyLog(widget.job_id, selectedscope, update.text, pending.text, issue.text, logdate.text.substring(0,10), controller.images)
-                                .then((value) => Navigator.pop(context)).then((value) {
-                                  return Dialogs.materialDialog(
-                                      barrierDismissible: false,
-                                      msg: 'Daily log data saved successfully',
-                                      title: "Success!",
-                                      color: Colors.white,
-                                      context: context,
-                                      actions: [
-                                        IconsButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (BuildContext context) =>
-                                                      DailyLogList(widget.job_id)),
-                                            );
-                                          },
-                                          text: 'Okay',
-                                          iconData: Icons.file_download_done,
-                                          color: Colors.green,
-                                          textStyle: TextStyle(color: Colors.white),
-                                          iconColor: Colors.white,
-                                        ),
-                                      ]);
-                                });
+                            await _dbdailylogmodel
+                                .addDailyLog(
+                                    widget.job_id,
+                                    selectedscope,
+                                    update.text,
+                                    pending.text,
+                                    issue.text,
+                                    logdate.text.substring(0, 10),
+                                    controller.images)
+                                .then((value) => Navigator.pop(context))
+                                .then((value) {
+                              return Dialogs.materialDialog(
+                                  barrierDismissible: false,
+                                  msg: 'Daily log data saved successfully',
+                                  title: "Success!",
+                                  color: Colors.white,
+                                  context: context,
+                                  actions: [
+                                    IconsButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  DailyLogList(widget.job_id)),
+                                        );
+                                      },
+                                      text: 'Okay',
+                                      iconData: Icons.file_download_done,
+                                      color: Colors.green,
+                                      textStyle: TextStyle(color: Colors.white),
+                                      iconColor: Colors.white,
+                                    ),
+                                  ]);
+                            });
                           }
                         },
                         child: Text('Submit'),

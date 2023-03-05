@@ -2,7 +2,6 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:wallmaster/model/jobmodel.dart';
 import 'package:wallmaster/widgets/cardmyjob.dart';
@@ -20,11 +19,6 @@ class _JobListState extends State<JobList> {
   final formkey = new GlobalKey<FormState>();
   final _advancedDrawerController = AdvancedDrawerController();
   final ScrollController _firstController = ScrollController();
-
-  var spinkit = SpinKitRotatingCircle(
-    color: Colors.white,
-    size: 50.0,
-  );
 
   @override
   Widget build(BuildContext context) {
